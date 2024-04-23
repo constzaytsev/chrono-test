@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>chrono test</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/gh/webasyst/webasyst-framework@webasyst2/wa-content/css/wa/wa-2.0.css"
+    />
+  </head>
+  <body>
+    <div id="app">
+      <div class="custom-m-24 align-center">
+        <div class="flexbox full-width">
+          <ul style="list-style: none">
+            <li>Meeting tomorrow morning</li>
+            <li>Bring a camera tmrw</li>
+            <li>Party fri night</li>
+            <li>Call James 7pm</li>
+            <li>Startup session 2:30pm</li>
+            <li>Dentist next saturday 9am</li>
+            <li>Christmas gift list on Dec 20</li>
+            <li>Jimmy's birthday March 12 every year</li>
+            <li>Sauna every week on sunday</li>
+            <li>Car service in a month</li>
+          </ul>
+          <ul style="list-style: none">
+            <li>明日朝のミーティング</li>
+            <li>明日カメラを持っていく</li>
+            <li>金曜の夜のパーティー</li>
+            <li>７pmにジェームスに電話をかける</li>
+            <li>スタートアップ</li>
+            <li>スタートアップセッション2:30pm</li>
+            <li>次の土曜日9amに歯医者さん</li>
+            <li>12月20日にクリスマスギフトリスト</li>
+            <li>毎年3月12日はジミーの誕生日</li>
+            <li>毎週日曜日はサウナ</li>
+            <li>一ヶ月以内に車検</li>
+          </ul>
+          <ul style="list-style: none">
+            <li>Meeting morgen früh</li>
+            <li>Morgen eine Kamera mitnehmen</li>
+            <li>Party Fre Abend</li>
+            <li>James anrufen 19 Uhr</li>
+            <li>Startup-Sitzung 14:30</li>
+            <li>Zahnarzt nächsten Samstag 9 Uhr</li>
+            <li>Weihnachtsgeschenke am 20. Dez</li>
+            <li>Jimmys Geburtstag 12. März jedes Jahr</li>
+            <li>Sauna jede Woche sonntags</li>
+            <li>Autowerkstatt in einem Monat</li>
+          </ul>
+        </div>
+
+        <div class="custom-my-24">
+          <input v-model="message" type="text" />
+          <button @click="() => test(message)">Test</button>
+          <div class="wa-select">
+          <select v-model="locale"> 
+            <option value="en">en</option>
+            <option value="ja">ja</option>
+            <option value="de">de</option>
+          </select>
+        </div>
+        </div>
+
+        <div class="custom-my-24" v-if="resultDate">
+          <div class="custom-my-12">
+            <small class="gray">Name</small><br />{{ resultName }}
+          </div>
+          <div class="custom-my-12">
+            <small class="gray">Date</small><br />{{ resultDate }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script type="module">
+      import { test as chrono } from '/main.js'
+
+      import {
+        createApp,
+        ref
+      } from 'https://unpkg.com/vue@3/dist/vue.esm-browser.js'
+
+      createApp({
+        setup() {
+          const message = ref('')
+          const resultName = ref('')
+          const resultDate = ref('')
+          const locale = ref('en')
+
+          const test = () => {
+            if (!message.value) return
+
+            resultName.value = ''
+            resultDate.value = ''
+
+            const chronoResult = chrono(message.value, locale.value)
+            if (chronoResult[0]) {
+              resultDate.value = chronoResult[0].start.date()
+              resultName.value = message.value.replace(chronoResult[0].text, '')
+            }
+          }
+
+          return {
+            message,
+            test,
+            resultName,
+            resultDate,
+            locale
+          }
+        }
+      }).mount('#app')
+    </script>
+  </body>
+</html>
